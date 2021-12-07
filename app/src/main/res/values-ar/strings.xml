@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tic Tac Toe</string>
+    <string name="pick_your_side">أختر الرمز</string>
+    <string name="choose_mode">اختر الوضع</string>
+    <string name="two_player">لاعبين</string>
+    <string name="one_player">لاعب واحد</string>
+    <string name="reset">إعادة</string>
+    <string name="start">إبداء</string>
+    <string name="draw">تعادل!</string>
+    <string name="wins">فائز!</string>
+    <string name="vs">-</string>
+    <string name="back_button">زر العودة</string>
+    <string name="about">عن اللعبة</string>
+</resources>

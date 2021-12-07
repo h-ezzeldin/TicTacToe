@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Tic Tac Toe</string>
+    <string name="pick_your_side">Pick Your Side</string>
+    <string name="choose_mode">Choose Mode</string>
+    <string name="two_player">Two Players</string>
+    <string name="one_player">Single Player</string>
+    <string name="reset">Reset</string>
+    <string name="start">Start</string>
+    <string name="draw">Draw!</string>
+    <string name="wins">Wins!</string>
+    <string name="vs">-</string>
+    <string name="back_button">back Button</string>
+    <string name="about">About</string>
+    <string name="info">Developed By \\nHussien Ezz \\nMail: hezzeldin1@gmail.com</string>
+</resources>

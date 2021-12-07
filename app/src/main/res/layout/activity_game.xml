@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingConstraints"
+    android:animateLayoutChanges="true"
+    >
+
+    <data>
+        <import type="android.view.View"/>
+        <import type="java.util.ArrayList"/>
+        <variable name="score" type="android.util.Pair" />
+        <variable name="activePlayer" type="Integer" />
+        <variable name="gameArray" type="ArrayList&lt;Integer>" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fitsSystemWindows="true"
+        tools:context=".GameActivity">
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_margin="16dp"
+            android:background="@drawable/button_back"
+            android:src="@drawable/ic_round_arrow_back_ios_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/back_button" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/score_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/normal_margin"
+            android:padding="16dp"
+            app:layout_constraintBottom_toTopOf="@id/play_grid_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/back_button"
+            app:layout_constraintWidth_max="500dp">
+
+            <FrameLayout
+                android:id="@+id/x_back_layout"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:background="@drawable/x_back"
+                android:visibility="@{activePlayer == 1 ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@id/x_layout"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="@id/x_layout"
+                app:layout_constraintStart_toStartOf="@id/x_layout"
+                app:layout_constraintTop_toTopOf="@id/x_layout"
+                tools:visibility="visible"/>
+
+            <FrameLayout
+                android:id="@+id/x_layout"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="@dimen/normal_margin"
+
+                android:background="@drawable/ic_x"
+                android:transitionName="x_trans"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/score_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <LinearLayout
+                android:id="@+id/score_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@id/o_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/x_layout"
+
+                >
+
+                <TextView
+                    android:id="@+id/x_score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
+                    android:text="@{String.valueOf(score.first)}"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
+                    tools:text="4" />
+
+                <TextView
+                    android:layout_marginHorizontal="@dimen/normal_margin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
+                    android:text="@string/vs" />
+
+                <TextView
+                    android:id="@+id/o_score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
+                    android:text="@{String.valueOf(score.second)}"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
+                    tools:text="1" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/o_back_layout"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:background="@drawable/o_back"
+                android:visibility="@{activePlayer == 2 ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@id/o_layout"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="@id/o_layout"
+                app:layout_constraintStart_toStartOf="@id/o_layout"
+                app:layout_constraintTop_toTopOf="@id/o_layout"
+                tools:visibility="visible"/>
+
+            <FrameLayout
+                android:id="@+id/o_layout"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@drawable/ic_o"
+                android:transitionName="o_trans"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/score_text"
+                app:layout_constraintTop_toTopOf="@id/x_layout" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <GridLayout
+            android:id="@+id/play_grid_layout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="16dp"
+            android:alignmentMode="alignBounds"
+            android:columnCount="3"
+            android:rowCount="3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_max="500dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/z_z"
+                style="@style/letterContainer">
+
+                <FrameLayout
+                    android:id="@+id/letter_z_z"
+                    style="@style/letter"
+                    android:visibility="@{gameArray[0] == 0 ? View.GONE : View.VISIBLE}"
+                    android:background="@{gameArray[0] == 2 ? @drawable/ic_o : @drawable/ic_x}"
+                    tools:background="@drawable/ic_x"
+                     />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/z_o"
+                style="@style/letterContainer" >
+
+                <FrameLayout
+                    android:id="@+id/letter_z_o"
+                    style="@style/letter"
+                    android:visibility="@{gameArray[1] == 0 ? View.GONE : View.VISIBLE}"
+                    android:background="@{gameArray[1] == 2 ? @drawable/ic_o : @drawable/ic_x}"
+                    tools:background="@drawable/ic_o"
+                     />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/z_t"
+                style="@style/letterContainer">
+
+                <FrameLayout
+                    android:id="@+id/letter_z_t"
+                    style="@style/letter"
+                    android:visibility="@{gameArray[2] == 0 ? View.GONE : View.VISIBLE}"
+                    android:background="@{gameArray[2] == 2 ? @drawable/ic_o : @drawable/ic_x}" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/o_z"
+                style="@style/letterContainer">
+
+                <FrameLayout
+                    android:id="@+id/letter_o_z"
+                    style="@style/letter"
+                    android:visibility="@{gameArray[3] == 0 ? View.GONE : View.VISIBLE}"
+                    android:background="@{gameArray[3] == 2 ? @drawable/ic_o : @drawable/ic_x}" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/o_o"
+                style="@style/letterContainer"
+                android:layout_margin="8dp" >
+
+                <FrameLayout
+                    android:id="@+id/letter_o_o"
+                    style="@style/letter"
+                    android:visibility="@{gameArray[4] == 0 ? View.GONE : View.VISIBLE}"
+                    android:background="@{gameArray[4] == 2 ? @drawable/ic_o : @drawable/ic_x}"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/o_t"
+                style="@style/letterContainer">
+
+                <FrameLayout
+                    android:id="@+id/letter_o_t"
+                    style="@style/letter"
+                    android:visibility="@{gameArray[5] == 0 ? View.GONE : View.VISIBLE}"
+                    android:background="@{gameArray[5] == 2 ? @drawable/ic_o : @drawable/ic_x}" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/t_z"
+                style="@style/letterContainer">
+
+                <FrameLayout
+                    android:id="@+id/letter_t_z"
+                    style="@style/letter"
+                    android:visibility="@{gameArray[6] == 0 ? View.GONE : View.VISIBLE}"
+                    android:background="@{gameArray[6] == 2 ? @drawable/ic_o : @drawable/ic_x}" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/t_o"
+                style="@style/letterContainer">
+
+                <FrameLayout
+                    android:id="@+id/letter_t_o"
+                    style="@style/letter"
+                    android:visibility="@{gameArray[7] == 0 ? View.GONE : View.VISIBLE}"
+                    android:background="@{gameArray[7] == 2 ? @drawable/ic_o : @drawable/ic_x}" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/t_t"
+                style="@style/letterContainer">
+
+                <FrameLayout
+                    android:id="@+id/letter_t_t"
+                    style="@style/letter"
+                    android:visibility="@{gameArray[8] == 0 ? View.GONE : View.VISIBLE}"
+                    android:background="@{gameArray[8] == 2 ? @drawable/ic_o : @drawable/ic_x}" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </GridLayout>
+
+        <ImageButton
+            android:id="@+id/reset_button"
+            style="@style/button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/normal_margin"
+            android:layout_marginTop="@dimen/normal_margin"
+            android:background="@drawable/sl_button_green"
+            android:padding="16dp"
+            android:src="@drawable/ic_round_refresh_24"
+            android:text="@string/reset"
+            android:transitionName="button_trans"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/play_grid_layout"
+            android:contentDescription="@string/back_button" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
