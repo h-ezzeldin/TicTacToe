@@ -7,16 +7,12 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.animation.LinearInterpolator
-import android.view.animation.TranslateAnimation
 import androidx.lifecycle.ViewModelProvider
 import com.ezz.tictactoe.databinding.ActivityGameBinding
 import com.ezz.tictactoe.databinding.DialogWinnerBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.util.Timer
 import kotlin.concurrent.schedule
-import android.widget.FrameLayout
-
-import android.view.animation.Animation
 
 
 
@@ -126,7 +122,6 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
 
             letterView
                 .animate()
-
                 .scaleX(1f)
                 .scaleY(1f)
                 .alpha(1.0f)

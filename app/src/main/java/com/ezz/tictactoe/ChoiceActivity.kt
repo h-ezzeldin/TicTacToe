@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.widget.Toast
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
 import com.ezz.tictactoe.databinding.ActivityChoiceBinding
@@ -35,7 +34,6 @@ class ChoiceActivity : AppCompatActivity() {
             choosen = 1
             Log.d(TAG, "choosen:$choosen ")
         }
-
 
         b.backButton.setOnClickListener { this@ChoiceActivity.onBackPressed() }
         b.pvpButton.setOnClickListener { startGame(2, choosen) }

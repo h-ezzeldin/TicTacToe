@@ -4,7 +4,6 @@ import android.util.Log
 import android.util.Pair
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
 import java.util.*
 
 open class GameViewModel : ViewModel() {
@@ -19,7 +18,6 @@ open class GameViewModel : ViewModel() {
 
     init {
         reset(true)
-
     }
 
     fun tap(index: Int) {
@@ -36,10 +34,7 @@ open class GameViewModel : ViewModel() {
                         "${gameArray.value!![3]},${gameArray.value!![4]},${gameArray.value!![5]}\n" +
                         "${gameArray.value!![6]},${gameArray.value!![7]},${gameArray.value!![8]}\n"
             )
-
         }
-
-
         checkWinner()
     }
 
@@ -183,7 +178,6 @@ open class GameViewModel : ViewModel() {
             }
             // make a random move
             array.contains(0) -> availablePositions.random()
-
 
             else -> -1
         }

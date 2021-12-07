@@ -8,10 +8,8 @@ import androidx.appcompat.content.res.AppCompatResources
 import com.ezz.tictactoe.databinding.ActivityMainBinding
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
-import com.ezz.tictactoe.databinding.DialogWinnerBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.util.*
-import kotlin.concurrent.schedule
 
 
 class MainActivity : AppCompatActivity() {
