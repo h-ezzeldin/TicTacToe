@@ -106,7 +106,12 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(p0: View?) {
-        if (activePlayer == primaryPlayer) tap(p0!!)
+
+        //if (activePlayer == primaryPlayer && mode == 1) tap(p0!!)
+        when (mode) {
+            2 -> tap(p0!!)
+            1 -> if(activePlayer == primaryPlayer) tap(p0!!)
+        }
     }
 
     private fun tap(view: View) {
@@ -127,7 +132,7 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
                 .alpha(1.0f)
                 .setDuration(250)
                 .setInterpolator(LinearInterpolator())
-                .withEndAction { if (activePlayer != primaryPlayer && mode == 1)gameViewModel.makeMove() }
+                .withEndAction { if (activePlayer != primaryPlayer && mode == 1) gameViewModel.makeMove() }
 
             }
 
