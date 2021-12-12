@@ -27,7 +27,7 @@ open class GameViewModel : ViewModel() {
             newArray[index] = activePlayer.value!!
             nextPlayer()
             gameArray.value = newArray
-            Log.d(TAG, "tap: "+ gameArray.value)
+            Log.d(TAG, "tap: " + gameArray.value)
             Log.d(
                 TAG, "tap: \n" +
                         "${gameArray.value!![0]},${gameArray.value!![1]},${gameArray.value!![2]}\n" +
@@ -60,7 +60,7 @@ open class GameViewModel : ViewModel() {
     private fun checkWinner() {
 
         val array = gameArray.value!!
-        Log.d(TAG, "checkWinner: ${array.subList(0,3)}")
+        Log.d(TAG, "checkWinner: ${array.subList(0, 3)}")
         val winner = when {
             (hashSetOf(array[0], array[1], array[2]).size == 1 && array[0] != 0) -> array[0]
             (hashSetOf(array[3], array[4], array[5]).size == 1 && array[3] != 0) -> array[3]
@@ -77,7 +77,7 @@ open class GameViewModel : ViewModel() {
         }
 
         Log.d(TAG, "checkWinner: $winner")
-        if ( winner != 0 ) theWinner.value = winner
+        if (winner != 0) theWinner.value = winner
         //else if (activePlayer.value != primaryPlayer && mode == 1) makeMove()
     }
 
@@ -89,17 +89,17 @@ open class GameViewModel : ViewModel() {
         }
     }
 
-    fun makeMove(){
+    fun makeMove() {
 
         val array = gameArray.value!!
-        val ai = if(primaryPlayer == 1) 2 else 1
+        val ai = if (primaryPlayer == 1) 2 else 1
         val availablePositions = ArrayList<Int>()
-        array.forEachIndexed { index, i -> if(i == 0) availablePositions.add(index) }
+        array.forEachIndexed { index, i -> if (i == 0) availablePositions.add(index) }
 
 
-        val zeroTo3 = array.subList(0,3)
-        val threeTo6 = array.subList(3,6)
-        val sixTo9 = array.subList(6,9)
+        val zeroTo3 = array.subList(0, 3)
+        val threeTo6 = array.subList(3, 6)
+        val sixTo9 = array.subList(6, 9)
 
         val zero36 = arrayListOf(array[0], array[3], array[6])
         val one47 = arrayListOf(array[1], array[4], array[7])
@@ -111,67 +111,100 @@ open class GameViewModel : ViewModel() {
         val newPosition: Int = when {
             // check if can win
             Collections.frequency(zeroTo3, ai) == 2 && zeroTo3.contains(0) -> zeroTo3.indexOf(0)
-            Collections.frequency(threeTo6, ai) == 2 && threeTo6.contains(0) -> threeTo6.indexOf(0)+3
-            Collections.frequency(sixTo9, ai) == 2 && sixTo9.contains(0) -> sixTo9.indexOf(0)+6
+            Collections.frequency(
+                threeTo6,
+                ai
+            ) == 2 && threeTo6.contains(0) -> threeTo6.indexOf(0) + 3
+            Collections.frequency(sixTo9, ai) == 2 && sixTo9.contains(0) -> sixTo9.indexOf(0) + 6
 
-            Collections.frequency(zero36, ai) == 2 && zero36.contains(0) -> when(zero36.indexOf(0)){
+            Collections.frequency(
+                zero36,
+                ai
+            ) == 2 && zero36.contains(0) -> when (zero36.indexOf(0)) {
                 1 -> 3
                 2 -> 6
                 else -> 0
             }
 
-            Collections.frequency(one47, ai) == 2 && one47.contains(0) -> when(one47.indexOf(0)){
+            Collections.frequency(one47, ai) == 2 && one47.contains(0) -> when (one47.indexOf(0)) {
                 1 -> 4
                 2 -> 7
                 else -> 1
             }
 
-            Collections.frequency(two58, ai) == 2 && two58.contains(0) -> when(two58.indexOf(0)){
+            Collections.frequency(two58, ai) == 2 && two58.contains(0) -> when (two58.indexOf(0)) {
                 1 -> 5
                 2 -> 8
                 else -> 2
             }
 
-            Collections.frequency(zero48, ai) == 2 && zero48.contains(0) -> when(zero48.indexOf(0)){
+            Collections.frequency(
+                zero48,
+                ai
+            ) == 2 && zero48.contains(0) -> when (zero48.indexOf(0)) {
                 1 -> 4
                 2 -> 8
                 else -> 0
             }
-            Collections.frequency(two46, ai) == 2 && two46.contains(0) -> when(two46.indexOf(0)){
+            Collections.frequency(two46, ai) == 2 && two46.contains(0) -> when (two46.indexOf(0)) {
                 1 -> 4
                 2 -> 6
                 else -> 2
             }
 
             // if cant win close the way
-                Collections.frequency(zeroTo3, primaryPlayer) == 2 && zeroTo3.contains(0) -> zeroTo3.indexOf(0)
-            Collections.frequency(threeTo6, primaryPlayer) == 2 && threeTo6.contains(0) -> threeTo6.indexOf(0)+3
-            Collections.frequency(sixTo9, primaryPlayer) == 2 && sixTo9.contains(0) -> sixTo9.indexOf(0)+6
+            Collections.frequency(
+                zeroTo3,
+                primaryPlayer
+            ) == 2 && zeroTo3.contains(0) -> zeroTo3.indexOf(0)
+            Collections.frequency(
+                threeTo6,
+                primaryPlayer
+            ) == 2 && threeTo6.contains(0) -> threeTo6.indexOf(0) + 3
+            Collections.frequency(
+                sixTo9,
+                primaryPlayer
+            ) == 2 && sixTo9.contains(0) -> sixTo9.indexOf(0) + 6
 
-            Collections.frequency(zero36, primaryPlayer) == 2 && zero36.contains(0) -> when(zero36.indexOf(0)){
+            Collections.frequency(
+                zero36,
+                primaryPlayer
+            ) == 2 && zero36.contains(0) -> when (zero36.indexOf(0)) {
                 1 -> 3
                 2 -> 6
                 else -> 0
             }
 
-            Collections.frequency(one47, primaryPlayer) == 2 && one47.contains(0) -> when(one47.indexOf(0)){
+            Collections.frequency(
+                one47,
+                primaryPlayer
+            ) == 2 && one47.contains(0) -> when (one47.indexOf(0)) {
                 1 -> 4
                 2 -> 7
                 else -> 1
             }
 
-            Collections.frequency(two58, primaryPlayer) == 2 && two58.contains(0) -> when(two58.indexOf(0)){
+            Collections.frequency(
+                two58,
+                primaryPlayer
+            ) == 2 && two58.contains(0) -> when (two58.indexOf(0)) {
                 1 -> 5
                 2 -> 8
                 else -> 2
             }
 
-            Collections.frequency(zero48, primaryPlayer) == 2 && zero48.contains(0) -> when(zero48.indexOf(0)){
+            Collections.frequency(
+                zero48,
+                primaryPlayer
+            ) == 2 && zero48.contains(0) -> when (zero48.indexOf(0)) {
                 1 -> 4
                 2 -> 8
                 else -> 0
             }
-            Collections.frequency(two46, primaryPlayer) == 2 && two46.contains(0) -> when(two46.indexOf(0)){
+            Collections.frequency(
+                two46,
+                primaryPlayer
+            ) == 2 && two46.contains(0) -> when (two46.indexOf(0)) {
                 1 -> 4
                 2 -> 6
                 else -> 2
@@ -185,14 +218,14 @@ open class GameViewModel : ViewModel() {
         if (newPosition > -1) decidedPosition.value = newPosition //tap(newPosition)
     }
 
-    fun setPrimaryPlayer(player: Int){
+    fun setPrimaryPlayer(player: Int) {
         primaryPlayer = player
         if (activePlayer.value == 0) activePlayer.value = player
     }
-    fun setMode(myMode: Int){
+
+    fun setMode(myMode: Int) {
         mode = myMode
     }
-
 
 
 }

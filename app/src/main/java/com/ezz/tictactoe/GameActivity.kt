@@ -15,15 +15,12 @@ import java.util.Timer
 import kotlin.concurrent.schedule
 
 
-
-
-
 class GameActivity : AppCompatActivity(), View.OnClickListener {
     private val TAG = "tag GameActivity"
 
     private var activePlayer = 0
     private var primaryPlayer = 0
-    private var mode = -0
+    private var mode = 0
 
     private lateinit var b: ActivityGameBinding
 
@@ -31,7 +28,7 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var choicesLettersArray: ArrayList<View>
 
-    lateinit var gameViewModel: GameViewModel
+    private lateinit var gameViewModel: GameViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,27 +48,25 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
         )
 
         choicesArray.forEach { it.setOnClickListener(this) }
+
         b.backButton.setOnClickListener { onBackPressed(); finish() }
 
         primaryPlayer = intent.getIntExtra("letter", 1)
         mode = intent.getIntExtra("mode", 1)
 
         gameViewModel = ViewModelProvider(this)[GameViewModel::class.java].apply {
-            this.setPrimaryPlayer(primaryPlayer)
-            this.setMode(mode)
+            setPrimaryPlayer(primaryPlayer)
+            setMode(mode)
         }
 
         b.resetButton.setOnClickListener { gameViewModel.reset(true) }
 
         gameViewModel.gameArray.observe(this, { b.gameArray = it })
 
-        gameViewModel.decidedPosition.observe(this, {
-            tap(choicesArray[it])
-        })
+        gameViewModel.decidedPosition.observe(this, { tap(choicesArray[it]) })
 
         gameViewModel.theWinner.observe(this, {
             if (it != 0) {
-
                 Handler(Looper.getMainLooper()).postDelayed({
                     gameViewModel.theWinner.postValue(0)
                     createDialog(it)
@@ -85,20 +80,23 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
 
         gameViewModel.activePlayer.observe(this, {
             b.activePlayer = it
-            this@GameActivity.activePlayer = it})
+            this@GameActivity.activePlayer = it
+        })
     }
 
     private fun createDialog(winner: Int) {
+
         val dialogView = View.inflate(this, R.layout.dialog_winner, null)
         val bDialog = DialogWinnerBinding.bind(dialogView)
+
         bDialog.winner = winner
 
         val dialog = MaterialAlertDialogBuilder(this@GameActivity)
             .setView(bDialog.root)
             .show()
 
-            Timer("SettingUp", false).schedule(1000) {
-                dialog.dismiss()
+        Timer("SettingUp", false).schedule(1000) {
+            dialog.dismiss()
 
         }
 
@@ -107,10 +105,9 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(p0: View?) {
 
-        //if (activePlayer == primaryPlayer && mode == 1) tap(p0!!)
         when (mode) {
             2 -> tap(p0!!)
-            1 -> if(activePlayer == primaryPlayer) tap(p0!!)
+            1 -> if (activePlayer == primaryPlayer) tap(p0!!)
         }
     }
 
@@ -120,23 +117,22 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
             val letterView = choicesLettersArray[choicesArray.indexOf(view)]
             if (letterView.visibility != View.VISIBLE) {
 
-            letterView.alpha = 0f
-            letterView.scaleX = 0f
-            letterView.scaleY = 0f
+                letterView.alpha = 0f
+                letterView.scaleX = 0f
+                letterView.scaleY = 0f
+
                 gameViewModel.tap(choicesArray.indexOf(view))
 
-            letterView
-                .animate()
-                .scaleX(1f)
-                .scaleY(1f)
-                .alpha(1.0f)
-                .setDuration(250)
-                .setInterpolator(LinearInterpolator())
-                .withEndAction { if (activePlayer != primaryPlayer && mode == 1) gameViewModel.makeMove() }
+                letterView
+                    .animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .alpha(1.0f)
+                    .setDuration(250)
+                    .setInterpolator(LinearInterpolator())
+                    .withEndAction { if (activePlayer != primaryPlayer && mode == 1) gameViewModel.makeMove() }
 
             }
-
-
 
 
         }
