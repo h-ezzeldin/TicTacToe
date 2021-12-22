@@ -8,6 +8,9 @@ import android.os.Looper
 import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.lifecycle.ViewModelProvider
+import com.ezz.tictactoe.Constants.LETTER_X
+import com.ezz.tictactoe.Constants.SINGLE_PLAYER
+import com.ezz.tictactoe.Constants.TWO_PLAYERS
 import com.ezz.tictactoe.databinding.ActivityGameBinding
 import com.ezz.tictactoe.databinding.DialogWinnerBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -15,6 +18,9 @@ import java.util.Timer
 import kotlin.concurrent.schedule
 
 
+/**
+ * here you can play with your chosen mode
+ */
 class GameActivity : AppCompatActivity(), View.OnClickListener {
     private val TAG = "tag GameActivity"
 
@@ -51,8 +57,8 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
 
         b.backButton.setOnClickListener { onBackPressed(); finish() }
 
-        primaryPlayer = intent.getIntExtra("letter", 1)
-        mode = intent.getIntExtra("mode", 1)
+        primaryPlayer = intent.getIntExtra("letter", LETTER_X)
+        mode = intent.getIntExtra("mode", SINGLE_PLAYER)
 
         gameViewModel = ViewModelProvider(this)[GameViewModel::class.java].apply {
             setPrimaryPlayer(primaryPlayer)
@@ -69,7 +75,7 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
             if (it != 0) {
                 Handler(Looper.getMainLooper()).postDelayed({
                     gameViewModel.theWinner.postValue(0)
-                    createDialog(it)
+                    showWinnerDialog(it)
                     gameViewModel.increaseScore(it)
                     gameViewModel.reset(false)
                 }, 250)
@@ -84,7 +90,11 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
         })
     }
 
-    private fun createDialog(winner: Int) {
+    /**
+     * shows a dialog of the winning letter with auto dismiss
+     * @param winner winning letter
+     */
+    private fun showWinnerDialog(winner: Int) {
 
         val dialogView = View.inflate(this, R.layout.dialog_winner, null)
         val bDialog = DialogWinnerBinding.bind(dialogView)
@@ -103,39 +113,45 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
+    /**
+     * checks if player can tap
+     */
     override fun onClick(p0: View?) {
-
-        when (mode) {
-            2 -> tap(p0!!)
-            1 -> if (activePlayer == primaryPlayer) tap(p0!!)
+        if (p0 in choicesArray) {
+            when (mode) {
+                TWO_PLAYERS -> tap(p0!!)
+                SINGLE_PLAYER -> if (activePlayer == primaryPlayer) tap(p0!!)
+            }
         }
     }
 
+    /**
+     * gets which view in clicked
+     * makes animation onClick
+     * @param view clicked view
+     */
     private fun tap(view: View) {
+        val letterView = choicesLettersArray[choicesArray.indexOf(view)]
 
-        if (view in choicesArray) {
-            val letterView = choicesLettersArray[choicesArray.indexOf(view)]
-            if (letterView.visibility != View.VISIBLE) {
+        if (letterView.visibility != View.VISIBLE) {
 
-                letterView.alpha = 0f
-                letterView.scaleX = 0f
-                letterView.scaleY = 0f
+            letterView.alpha = 0f
+            letterView.scaleX = 0f
+            letterView.scaleY = 0f
 
-                gameViewModel.tap(choicesArray.indexOf(view))
+            gameViewModel.tap(choicesArray.indexOf(view))
 
-                letterView
-                    .animate()
-                    .scaleX(1f)
-                    .scaleY(1f)
-                    .alpha(1.0f)
-                    .setDuration(250)
-                    .setInterpolator(LinearInterpolator())
-                    .withEndAction { if (activePlayer != primaryPlayer && mode == 1) gameViewModel.makeMove() }
-
-            }
-
+            letterView
+                .animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .alpha(1.0f)
+                .setDuration(250)
+                .setInterpolator(LinearInterpolator())
+                .withEndAction { if (activePlayer != primaryPlayer && mode == SINGLE_PLAYER) gameViewModel.makeMove() }
 
         }
+
 
     }
 }

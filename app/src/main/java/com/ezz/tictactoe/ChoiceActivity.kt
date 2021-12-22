@@ -3,18 +3,21 @@ package com.ezz.tictactoe
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
+import com.ezz.tictactoe.Constants.LETTER_O
+import com.ezz.tictactoe.Constants.LETTER_X
+import com.ezz.tictactoe.Constants.SINGLE_PLAYER
+import com.ezz.tictactoe.Constants.TWO_PLAYERS
 import com.ezz.tictactoe.databinding.ActivityChoiceBinding
 
+/**
+ * here you can choice which letter to start
+ * and which mode you want to play
+ */
 class ChoiceActivity : AppCompatActivity() {
     private val TAG = "tag ChoiceActivity"
-    private val SINGLE_PLAYER = 1
-    private val TWO_PLAYERS = 2
     private lateinit var b: ActivityChoiceBinding
 
     var chosen = 1
@@ -27,33 +30,39 @@ class ChoiceActivity : AppCompatActivity() {
         b.chosenLetter = chosen
 
         b.oLayout.setOnClickListener {
-            b.chosenLetter =  2
-            chosen = 2
+            b.chosenLetter = LETTER_O
+            chosen = LETTER_O
         }
         b.xLayout.setOnClickListener {
-            b.chosenLetter =  1
-            chosen = 1
+            b.chosenLetter = LETTER_X
+            chosen = LETTER_X
         }
 
         b.backButton.setOnClickListener { this@ChoiceActivity.onBackPressed() }
         b.pvpButton.setOnClickListener { startGame(TWO_PLAYERS, chosen) }
-        b.pvaiButton.setOnClickListener { startGame(SINGLE_PLAYER, chosen)}
+        b.pvaiButton.setOnClickListener { startGame(SINGLE_PLAYER, chosen) }
+        // TODO network play button
     }
 
-    private fun startGame(mode: Int, letter: Int){
+    /**
+     * starts activity with shared transitions
+     * @param mode game mode
+     * @param letter which letter will start
+     */
+    private fun startGame(mode: Int, letter: Int) {
 
-            val intent = Intent(this, GameActivity::class.java).apply {
-                putExtra("letter", letter)
-                putExtra("mode", mode)
-            }
+        val intent = Intent(this, GameActivity::class.java).apply {
+            putExtra("letter", letter)
+            putExtra("mode", mode)
+        }
 
-            val p1: Pair<View, String> = Pair(b.pvpButton, "button_trans")
-            val p2: Pair<View, String> = Pair(b.xLayout, "x_trans")
-            val p3: Pair<View, String> = Pair(b.oLayout, "o_trans")
+        val p1: Pair<View, String> = Pair(b.pvpButton, "button_trans")
+        val p2: Pair<View, String> = Pair(b.xLayout, "x_trans")
+        val p3: Pair<View, String> = Pair(b.oLayout, "o_trans")
 
-            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, p1, p2, p3)
+        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, p1, p2, p3)
 
-            startActivity(intent, options.toBundle())
+        startActivity(intent, options.toBundle())
 
     }
 
