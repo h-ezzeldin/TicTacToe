@@ -10,4 +10,6 @@ object Constants {
 
     const val LETTER_X = 1
     const val LETTER_O = 2
+
+    const val DURATION = 250L
 }

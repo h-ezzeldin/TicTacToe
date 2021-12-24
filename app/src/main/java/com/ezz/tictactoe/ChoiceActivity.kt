@@ -22,7 +22,6 @@ class ChoiceActivity : AppCompatActivity() {
 
     var chosen = 1
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         b = ActivityChoiceBinding.inflate(layoutInflater)

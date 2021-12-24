@@ -1,27 +1,29 @@
 package com.ezz.tictactoe
 
-import android.util.Log
-import android.util.Pair
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ezz.tictactoe.Constants.LETTER_O
 import com.ezz.tictactoe.Constants.LETTER_X
+import com.ezz.tictactoe.Constants.SINGLE_PLAYER
 import java.util.*
 import kotlin.collections.ArrayList
+import com.ezz.tictactoe.Constants.DURATION
+import kotlin.concurrent.schedule
 
 /**
  * ViewModel which controls game logic
  */
+
 open class GameViewModel : ViewModel() {
     private val TAG = "tag GameViewModel"
     private var primaryPlayer: Int = 0
     private var mode: Int = 0
+
     val activePlayer = MutableLiveData<Int>()
     val theWinner = MutableLiveData<Int>()
     val score = MutableLiveData<Pair<Int, Int>>()
     val gameArray = MutableLiveData<ArrayList<Int>>()
-    val decidedPosition = MutableLiveData<Int>()
-
+    var decidedPosition = MutableLiveData<Int>()
 
     init {
         reset(true)
@@ -33,19 +35,14 @@ open class GameViewModel : ViewModel() {
      */
     fun tap(index: Int) {
         if (gameArray.value!![index] == 0) {
-
-            val newArray = gameArray.value!!
-            newArray[index] = activePlayer.value!!
+            gameArray.value = gameArray.value!!.also { it[index] = activePlayer.value!! }
             nextPlayer()
-            gameArray.value = newArray
-            Log.d(
-                TAG, "tap: \n" +
-                        "${gameArray.value!![0]},${gameArray.value!![1]},${gameArray.value!![2]}\n" +
-                        "${gameArray.value!![3]},${gameArray.value!![4]},${gameArray.value!![5]}\n" +
-                        "${gameArray.value!![6]},${gameArray.value!![7]},${gameArray.value!![8]}\n"
-            )
         }
-        checkWinner()
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            checkWinner()
+//        }, DURATION)
+        Timer().schedule(DURATION) { checkWinner() }
+
     }
 
     /**
@@ -63,14 +60,27 @@ open class GameViewModel : ViewModel() {
      * @param isButton is reset by user
      */
     fun reset(isButton: Boolean) {
-        activePlayer.value = primaryPlayer
-        Log.d(TAG, "reset: ${activePlayer.value}")
-        if (isButton) score.value = Pair(0, 0)
-        gameArray.value = arrayListOf(
-            0, 0, 0,
-            0, 0, 0,
-            0, 0, 0
-        )
+        if (isButton) {
+            score.value = (Pair(0, 0))
+            activePlayer.value = (primaryPlayer)
+            gameArray.value = (
+                    arrayListOf(
+                        0, 0, 0,
+                        0, 0, 0,
+                        0, 0, 0
+                    )
+                    )
+        } else {
+            activePlayer.postValue(primaryPlayer)
+            gameArray.postValue(
+                arrayListOf(
+                    0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0
+                )
+            )
+        }
+        //if (isButton) score.postValue(Pair(0, 0))
 
     }
 
@@ -95,32 +105,39 @@ open class GameViewModel : ViewModel() {
             else -> 0
         }
 
-        Log.d(TAG, "checkWinner: $winner")
-        if (winner != 0) theWinner.value = winner
-        //else if (activePlayer.value != primaryPlayer && mode == 1) makeMove()
+        if (winner != 0) { //&& theWinner.value == 0
+            theWinner.postValue(winner)
+            increaseScore(winner)
+            reset(false)
+
+            Timer().schedule(DURATION) { theWinner.postValue(0) }
+        } else if (activePlayer.value != primaryPlayer && mode == SINGLE_PLAYER) makeMove()
     }
 
     /**
      * increases score for the winner
      * @param player the winner
      */
-    fun increaseScore(player: Int) {
+    private fun increaseScore(player: Int) {
         val newScore = score.value!!
+
         when (player) {
-            LETTER_X -> score.value = Pair(newScore.first + 1, newScore.second)
-            LETTER_O -> score.value = Pair(newScore.first, newScore.second + 1)
+            LETTER_X -> score.postValue(Pair(newScore.first + 1, newScore.second))
+            LETTER_O -> score.postValue(Pair(newScore.first, newScore.second + 1))
         }
+        //reset(false)
     }
 
     /**
      * checks game array and takes the right move
      */
-    fun makeMove() {
+    private fun makeMove() {
         // TODO optimize function
         val array = gameArray.value!!
         val ai = if (primaryPlayer == LETTER_X) LETTER_O else LETTER_X
+
         val availablePositions = ArrayList<Int>()
-        array.forEachIndexed { index, i -> if (i == 0) availablePositions.add(index) }
+        array.forEachIndexed { i, v -> if (v == 0) availablePositions.add(i) }
 
         val zeroTo3 = array.subList(0, 3)
         val threeTo6 = array.subList(3, 6)
@@ -241,14 +258,30 @@ open class GameViewModel : ViewModel() {
 
             else -> -1
         }
-        //Log.d(TAG, "---- makeMove: $newPosition")
-
-        //val position = decidePosition()
-        //Log.d(TAG, "---- decided: $position")
-        if (newPosition > -1) decidedPosition.value = newPosition //tap(newPosition)
+        if (newPosition > -1) {
+            decidedPosition.postValue(newPosition)
+            Timer().schedule(DURATION) { decidedPosition.postValue(-1) }
+        }
     }
 
-//    private fun decidePosition(): Int {
+    /**
+     * sets which letter is chosen by user
+     * @param player chosen letter
+     */
+    fun setPrimaryPlayer(player: Int) {
+        primaryPlayer = player
+        if (activePlayer.value == 0) activePlayer.value = player
+    }
+
+    /**
+     * sets which mode is chosen by user
+     * @param myMode chosen mode
+     */
+    fun setMode(myMode: Int) {
+        mode = myMode
+    }
+
+    //    private fun decidePosition(): Int {
 //
 //        val array = gameArray.value!!
 //        val availablePositions = ArrayList<Int>()
@@ -312,24 +345,5 @@ open class GameViewModel : ViewModel() {
 //                && list.minus(0).toHashSet().size == 1)
 //
 //    }
-
-
-    /**
-     * sets which letter is chosen by user
-     * @param player chosen letter
-     */
-    fun setPrimaryPlayer(player: Int) {
-        primaryPlayer = player
-        if (activePlayer.value == 0) activePlayer.value = player
-    }
-
-    /**
-     * sets which mode is chosen by user
-     * @param myMode chosen mode
-     */
-    fun setMode(myMode: Int) {
-        mode = myMode
-    }
-
 
 }

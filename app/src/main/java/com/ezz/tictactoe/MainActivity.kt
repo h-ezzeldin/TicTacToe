@@ -11,7 +11,6 @@ import androidx.core.util.Pair
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.util.*
 
-
 /**
  * @author hussein Ezz eldin
  * mail: hezzeldin1@gmail.com
@@ -33,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * starts choices Activity with some shared transitions
      */
-    private fun toChoiceActivity(){
+    private fun toChoiceActivity() {
         val intent = Intent(this, ChoiceActivity::class.java)
         val p1: Pair<View, String> = Pair(b.startButton, "button_trans")
         val p2: Pair<View, String> = Pair(b.xLetter, "x_trans")
@@ -45,7 +44,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * shows information about developer in alert dialog
      */
-    private fun showAboutDeveloper(){
+    private fun showAboutDeveloper() {
         MaterialAlertDialogBuilder(this@MainActivity)
             .setBackground(AppCompatResources.getDrawable(this@MainActivity, R.color.white))
             .setTitle(getString(R.string.about))

@@ -1,22 +1,22 @@
 package com.ezz.tictactoe
 
-
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
+import android.widget.FrameLayout
+import androidx.core.util.toAndroidPair
 import androidx.lifecycle.ViewModelProvider
+import com.ezz.tictactoe.Constants.DURATION
 import com.ezz.tictactoe.Constants.LETTER_X
 import com.ezz.tictactoe.Constants.SINGLE_PLAYER
 import com.ezz.tictactoe.Constants.TWO_PLAYERS
 import com.ezz.tictactoe.databinding.ActivityGameBinding
 import com.ezz.tictactoe.databinding.DialogWinnerBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java.util.Timer
-import kotlin.concurrent.schedule
-
 
 /**
  * here you can play with your chosen mode
@@ -30,9 +30,7 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var b: ActivityGameBinding
 
-    private lateinit var choicesArray: ArrayList<View>
-
-    private lateinit var choicesLettersArray: ArrayList<View>
+    private lateinit var lettersArray: ArrayList<FrameLayout>
 
     private lateinit var gameViewModel: GameViewModel
 
@@ -41,19 +39,13 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
         b = ActivityGameBinding.inflate(layoutInflater)
         setContentView(b.root)
 
-
-        choicesArray = arrayListOf(
-            b.zZ, b.zO, b.zT,
-            b.oZ, b.oO, b.oT,
-            b.tZ, b.tO, b.tT,
-        )
-        choicesLettersArray = arrayListOf(
-            b.letterZZ, b.letterZO, b.letterZT,
-            b.letterOZ, b.letterOO, b.letterOT,
-            b.letterTZ, b.letterTO, b.letterTT,
+        lettersArray = arrayListOf(
+            b.zero, b.one, b.two,
+            b.three, b.four, b.five,
+            b.six, b.seven, b.eight,
         )
 
-        choicesArray.forEach { it.setOnClickListener(this) }
+        lettersArray.forEach { it.setOnClickListener(this) }
 
         b.backButton.setOnClickListener { onBackPressed(); finish() }
 
@@ -67,22 +59,33 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
 
         b.resetButton.setOnClickListener { gameViewModel.reset(true) }
 
-        gameViewModel.gameArray.observe(this, { b.gameArray = it })
+        gameViewModel.gameArray.observe(this, {
+            b.gameArray = it
+            Log.d(
+                TAG, "gameArray: \n" +
+                        "${it[0]},${it[1]},${it[2]}\n" +
+                        "${it[3]},${it[4]},${it[5]}\n" +
+                        "${it[6]},${it[7]},${it[8]}\n"
+            )
+        })
 
-        gameViewModel.decidedPosition.observe(this, { tap(choicesArray[it]) })
+        gameViewModel.decidedPosition.observe(this, {
+            if (it != -1) tap(it)
+            Log.d(TAG, "onCreate: $it")
+        })
 
         gameViewModel.theWinner.observe(this, {
             if (it != 0) {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    gameViewModel.theWinner.postValue(0)
-                    showWinnerDialog(it)
-                    gameViewModel.increaseScore(it)
-                    gameViewModel.reset(false)
-                }, 250)
+                Log.d(TAG, "---------------------the winner: $it ")
+                //Handler(Looper.getMainLooper()).postDelayed({
+                showWinnerDialog(it)
+                //gameViewModel.theWinner.value = 0
+                //gameViewModel.reset(false)
+                //}, 250)
             }
         })
 
-        gameViewModel.score.observe(this, { b.score = it })
+        gameViewModel.score.observe(this, { b.score = it.toAndroidPair() })
 
         gameViewModel.activePlayer.observe(this, {
             b.activePlayer = it
@@ -95,7 +98,6 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
      * @param winner winning letter
      */
     private fun showWinnerDialog(winner: Int) {
-
         val dialogView = View.inflate(this, R.layout.dialog_winner, null)
         val bDialog = DialogWinnerBinding.bind(dialogView)
 
@@ -105,11 +107,7 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
             .setView(bDialog.root)
             .show()
 
-        Timer("SettingUp", false).schedule(1000) {
-            dialog.dismiss()
-
-        }
-
+        Handler(Looper.getMainLooper()).postDelayed({ dialog.dismiss() }, 1000)
 
     }
 
@@ -117,41 +115,35 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
      * checks if player can tap
      */
     override fun onClick(p0: View?) {
-        if (p0 in choicesArray) {
+        if (p0 in lettersArray) {
             when (mode) {
-                TWO_PLAYERS -> tap(p0!!)
-                SINGLE_PLAYER -> if (activePlayer == primaryPlayer) tap(p0!!)
+                TWO_PLAYERS -> tap(lettersArray.indexOf(p0))
+                SINGLE_PLAYER -> if (activePlayer == primaryPlayer) tap(lettersArray.indexOf(p0))
             }
         }
     }
 
     /**
-     * gets which view in clicked
+     * gets which view is clicked
      * makes animation onClick
-     * @param view clicked view
+     * @param index clicked index
      */
-    private fun tap(view: View) {
-        val letterView = choicesLettersArray[choicesArray.indexOf(view)]
+    private fun tap(index: Int) {
+        val letterView = lettersArray[index]
 
-        if (letterView.visibility != View.VISIBLE) {
+        letterView.alpha = 0f
+        letterView.scaleX = 0f
+        letterView.scaleY = 0f
 
-            letterView.alpha = 0f
-            letterView.scaleX = 0f
-            letterView.scaleY = 0f
+        gameViewModel.tap(index)
 
-            gameViewModel.tap(choicesArray.indexOf(view))
-
-            letterView
-                .animate()
-                .scaleX(1f)
-                .scaleY(1f)
-                .alpha(1.0f)
-                .setDuration(250)
-                .setInterpolator(LinearInterpolator())
-                .withEndAction { if (activePlayer != primaryPlayer && mode == SINGLE_PLAYER) gameViewModel.makeMove() }
-
-        }
-
-
+        letterView
+            .animate()
+            .scaleX(1f)
+            .scaleY(1f)
+            .alpha(1f)
+            .setDuration(DURATION)
+            .setInterpolator(LinearInterpolator())
     }
+
 }
