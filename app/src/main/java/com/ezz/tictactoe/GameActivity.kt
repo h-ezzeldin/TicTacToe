@@ -1,6 +1,5 @@
 package com.ezz.tictactoe
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -8,12 +7,14 @@ import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.util.toAndroidPair
 import androidx.lifecycle.ViewModelProvider
 import com.ezz.tictactoe.Constants.DURATION
 import com.ezz.tictactoe.Constants.LETTER_X
 import com.ezz.tictactoe.Constants.SINGLE_PLAYER
 import com.ezz.tictactoe.Constants.TWO_PLAYERS
+import com.ezz.tictactoe.Constants.playSound
 import com.ezz.tictactoe.databinding.ActivityGameBinding
 import com.ezz.tictactoe.databinding.DialogWinnerBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -59,7 +60,7 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
 
         b.resetButton.setOnClickListener { gameViewModel.reset(true) }
 
-        gameViewModel.gameArray.observe(this, {
+        gameViewModel.gameArray.observe(this) {
             b.gameArray = it
             Log.d(
                 TAG, "gameArray: \n" +
@@ -67,14 +68,14 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
                         "${it[3]},${it[4]},${it[5]}\n" +
                         "${it[6]},${it[7]},${it[8]}\n"
             )
-        })
+        }
 
-        gameViewModel.decidedPosition.observe(this, {
+        gameViewModel.decidedPosition.observe(this) {
             if (it != -1) tap(it)
             Log.d(TAG, "onCreate: $it")
-        })
+        }
 
-        gameViewModel.theWinner.observe(this, {
+        gameViewModel.theWinner.observe(this) {
             if (it != 0) {
                 Log.d(TAG, "---------------------the winner: $it ")
                 //Handler(Looper.getMainLooper()).postDelayed({
@@ -83,14 +84,14 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
                 //gameViewModel.reset(false)
                 //}, 250)
             }
-        })
+        }
 
-        gameViewModel.score.observe(this, { b.score = it.toAndroidPair() })
+        gameViewModel.score.observe(this) { b.score = it.toAndroidPair() }
 
-        gameViewModel.activePlayer.observe(this, {
+        gameViewModel.activePlayer.observe(this) {
             b.activePlayer = it
             this@GameActivity.activePlayer = it
-        })
+        }
     }
 
     /**
@@ -98,6 +99,13 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
      * @param winner winning letter
      */
     private fun showWinnerDialog(winner: Int) {
+
+        if (mode == SINGLE_PLAYER) {
+            if (winner == primaryPlayer) playSound(this, 1) else playSound(this, 2)
+        } else {
+            if (winner == 3) playSound(this, 2) else playSound(this, 1)
+        }
+
         val dialogView = View.inflate(this, R.layout.dialog_winner, null)
         val bDialog = DialogWinnerBinding.bind(dialogView)
 
@@ -130,20 +138,29 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
      */
     private fun tap(index: Int) {
         val letterView = lettersArray[index]
+        if (letterView.background == null) {
+            letterView.alpha = 0f
+            letterView.scaleX = 0f
+            letterView.scaleY = 0f
 
-        letterView.alpha = 0f
-        letterView.scaleX = 0f
-        letterView.scaleY = 0f
+            gameViewModel.tap(index)
 
-        gameViewModel.tap(index)
+            playSound(this, 3)
 
-        letterView
-            .animate()
-            .scaleX(1f)
-            .scaleY(1f)
-            .alpha(1f)
-            .setDuration(DURATION)
-            .setInterpolator(LinearInterpolator())
+            letterView
+                .animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .alpha(1f)
+                .setDuration(DURATION)
+                .interpolator = LinearInterpolator()
+        }
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Constants.releasePlayer()
     }
 
 }

@@ -13,6 +13,7 @@
         <entry key="..\:/AndroidStudioProjects/TicTacToe/app/src/main/res/drawable/button_back.xml" value="0.30683760683760686" />
         <entry key="..\:/AndroidStudioProjects/TicTacToe/app/src/main/res/drawable/button_gray.xml" value="0.30683760683760686" />
         <entry key="..\:/AndroidStudioProjects/TicTacToe/app/src/main/res/drawable/button_gray_pressed.xml" value="0.1764957264957265" />
+        <entry key="..\:/AndroidStudioProjects/TicTacToe/app/src/main/res/drawable/button_green.xml" value="0.3029535864978903" />
         <entry key="..\:/AndroidStudioProjects/TicTacToe/app/src/main/res/drawable/button_green_pressed.xml" value="0.30683760683760686" />
         <entry key="..\:/AndroidStudioProjects/TicTacToe/app/src/main/res/drawable/button_orange.xml" value="0.1764957264957265" />
         <entry key="..\:/AndroidStudioProjects/TicTacToe/app/src/main/res/drawable/button_orange_pressed.xml" value="0.30683760683760686" />
@@ -44,7 +45,7 @@
         <entry key="..\:/AndroidStudioProjects/TicTacToe/app/src/main/res/layout-land/activity_game.xml" value="0.25" />
         <entry key="..\:/AndroidStudioProjects/TicTacToe/app/src/main/res/layout-land/activity_main.xml" value="0.3054054054054054" />
         <entry key="..\:/AndroidStudioProjects/TicTacToe/app/src/main/res/layout/activity_choice.xml" value="0.5157657657657657" />
-        <entry key="..\:/AndroidStudioProjects/TicTacToe/app/src/main/res/layout/activity_game.xml" value="0.3264957264957265" />
+        <entry key="..\:/AndroidStudioProjects/TicTacToe/app/src/main/res/layout/activity_game.xml" value="0.25" />
         <entry key="..\:/AndroidStudioProjects/TicTacToe/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/AndroidStudioProjects/TicTacToe/app/src/main/res/layout/dialog_winner.xml" value="0.2935897435897436" />
         <entry key="..\:/AndroidStudioProjects/TicTacToe/app/src/main/res/layout/letter_o.xml" value="0.3578125" />

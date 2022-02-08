@@ -9,14 +9,14 @@ import com.ezz.tictactoe.databinding.ActivityMainBinding
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java.util.*
+
 
 /**
  * @author hussein Ezz eldin
  * mail: hezzeldin1@gmail.com
  */
 class MainActivity : AppCompatActivity() {
-    lateinit var b: ActivityMainBinding
+    private lateinit var b: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

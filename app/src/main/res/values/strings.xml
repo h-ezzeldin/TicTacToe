@@ -11,5 +11,6 @@
     <string name="vs">-</string>
     <string name="back_button">back Button</string>
     <string name="about">About</string>
-    <string name="info" translatable="false">Developed By \nHussien Ezz \nMail: hezzeldin1@gmail.com</string>
+    <string name="info" translatable="false">Developed By \nHussien Ezz \nMail: hezzeldin1@gmail.com \nSound from Zapsplat.com</string>
+
 </resources>
