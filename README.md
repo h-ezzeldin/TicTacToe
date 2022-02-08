@@ -1,3 +1,3 @@
 # TicTacToe
 tic tac toe android game 
-using MVVM - Material Design 3 - DataBinding - ViewBinding - Figma
+using MVVM - JUnit - Material Design - DataBinding - ViewBinding - Figma
