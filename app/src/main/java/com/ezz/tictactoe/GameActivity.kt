@@ -63,10 +63,11 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
         gameViewModel.gameArray.observe(this) {
             b.gameArray = it
             Log.d(
-                TAG, "gameArray: \n" +
-                        "${it[0]},${it[1]},${it[2]}\n" +
-                        "${it[3]},${it[4]},${it[5]}\n" +
-                        "${it[6]},${it[7]},${it[8]}\n"
+                TAG,
+                "gameArray: \n" +
+                    "${it[0]},${it[1]},${it[2]}\n" +
+                    "${it[3]},${it[4]},${it[5]}\n" +
+                    "${it[6]},${it[7]},${it[8]}\n"
             )
         }
 
@@ -78,11 +79,11 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
         gameViewModel.theWinner.observe(this) {
             if (it != 0) {
                 Log.d(TAG, "---------------------the winner: $it ")
-                //Handler(Looper.getMainLooper()).postDelayed({
+                // Handler(Looper.getMainLooper()).postDelayed({
                 showWinnerDialog(it)
-                //gameViewModel.theWinner.value = 0
-                //gameViewModel.reset(false)
-                //}, 250)
+                // gameViewModel.theWinner.value = 0
+                // gameViewModel.reset(false)
+                // }, 250)
             }
         }
 
@@ -116,7 +117,6 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
             .show()
 
         Handler(Looper.getMainLooper()).postDelayed({ dialog.dismiss() }, 1000)
-
     }
 
     /**
@@ -155,12 +155,10 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
                 .setDuration(DURATION)
                 .interpolator = LinearInterpolator()
         }
-
     }
 
     override fun onStop() {
         super.onStop()
         Constants.releasePlayer()
     }
-
 }

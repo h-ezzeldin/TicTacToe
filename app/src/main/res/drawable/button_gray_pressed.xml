@@ -4,11 +4,9 @@
     <!-- Bottom 15dp Shadow -->
     <item android:top="15px">
         <shape  android:shape="rectangle">
-
             <!--            Button Shadow Color -->
-            <solid android:color="@color/gray_200" />
+            <solid android:color="@color/white" />
             <corners android:radius="@dimen/corner_radius" />
-
         </shape>
     </item>
 

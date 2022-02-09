@@ -6,7 +6,7 @@
         <shape  android:shape="rectangle">
 
             <!--            Button Shadow Color -->
-            <solid android:color="@color/orange_a700" />
+            <solid android:color="@color/orange_a400" />
             <corners android:radius="@dimen/corner_radius" />
 
         </shape>

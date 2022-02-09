@@ -1,9 +1,9 @@
 package com.ezz.tictactoe
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
 import com.ezz.tictactoe.Constants.LETTER_O
@@ -20,7 +20,7 @@ class ChoiceActivity : AppCompatActivity() {
     private val TAG = "tag ChoiceActivity"
     private lateinit var b: ActivityChoiceBinding
 
-    var chosen = 1
+    private var chosen = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +62,5 @@ class ChoiceActivity : AppCompatActivity() {
         val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, p1, p2, p3)
 
         startActivity(intent, options.toBundle())
-
     }
-
 }
